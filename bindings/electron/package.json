@@ -1,6 +1,6 @@
 {
     "name": "libparsec_bindings_electron",
-    "version": "3.7.10-rc.3+dev",
+    "version": "3.7.10-rc.3.dev.20563+bf4338b",
     "description": "",
     "main": "dist/libparsec.node",
     "scripts": {
