@@ -58,6 +58,7 @@
         </ion-radio>
 
         <ion-radio
+          v-if="false"
           :value="RecoveryMethodStep.Shamir"
           class="recovery-method-item"
           :class="{ 'recovery-method-item--selected': selectedMethod === RecoveryMethodStep.Shamir }"

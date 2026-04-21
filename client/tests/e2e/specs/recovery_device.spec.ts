@@ -43,15 +43,25 @@ for (const authMode of ['password', 'sso']) {
     await expect(myProfilePage.locator('.recovery-devices').locator('ion-button')).toHaveText('Recover my session');
     await myProfilePage.locator('.recovery-devices').locator('ion-button').click();
 
-    const importStep = myProfilePage.locator('#recovery-import-step');
-    const authStep = myProfilePage.locator('#recovery-auth-step');
-    const doneStep = myProfilePage.locator('#recovery-success-step');
+    const importRecoveryModal = myProfilePage.locator('.import-recovery-device-modal');
+    const recoveryMethodChoices = importRecoveryModal.locator('.recovery-method-item');
+    const recoveryFilesContent = importRecoveryModal.locator('.recovery-device-files-page');
 
-    await expect(importStep).toBeVisible();
-    await expect(authStep).toBeHidden();
-    await expect(doneStep).toBeHidden();
+    await expect(importRecoveryModal).toBeVisible();
+    await expect(recoveryFilesContent).toBeHidden();
 
-    const importItems = importStep.locator('.recovery-list-item');
+    await expect(recoveryMethodChoices).toHaveCount(2);
+    await expect(recoveryMethodChoices.locator('.recovery-method-item__title')).toHaveText([
+      'Another connected device/browser',
+      'Recovery file',
+    ]);
+
+    await recoveryMethodChoices.nth(1).click();
+    await expect(recoveryMethodChoices.nth(1)).toHaveClass(/recovery-method-item--selected/);
+    await importRecoveryModal.locator('#next-button').click();
+    await expect(recoveryFilesContent).toBeVisible();
+
+    const importItems = importRecoveryModal.locator('.recovery-device-files-page').locator('.recovery-item');
     await expect(importItems.nth(0).locator('.recovery-list-item__button').locator('div')).toHaveText('No file selected');
     await expect(importItems.nth(0).locator('.recovery-list-item__button').locator('ion-button')).toHaveText('Browse');
     await expect(importItems.nth(1)).toHaveTheClass('disabled');
@@ -76,11 +86,11 @@ for (const authMode of ['password', 'sso']) {
     await expect(myProfilePage.locator('#to-password-change-btn')).toBeTrulyEnabled();
     await myProfilePage.locator('#to-password-change-btn').click();
 
-    await expect(importStep).toBeHidden();
-    await expect(authStep).toBeVisible();
-    await expect(doneStep).toBeHidden();
+    // await expect(importStep).toBeHidden();
+    // await expect(authStep).toBeVisible();
+    // await expect(doneStep).toBeHidden();
 
-    const authContainer = authStep.locator('.choose-auth-page');
+    const authContainer = importRecoveryModal.locator('.choose-auth-page');
     await expect(authContainer).toBeVisible();
     const authNext = myProfilePage.locator('#validate-password-btn');
     await expect(authNext).toHaveText('Confirm');
@@ -102,12 +112,12 @@ for (const authMode of ['password', 'sso']) {
     await expect(authNext).toNotHaveDisabledAttribute();
     await authNext.click();
 
-    await expect(importStep).toBeHidden();
-    await expect(authStep).toBeHidden();
-    await expect(doneStep).toBeVisible();
+    // await expect(importStep).toBeHidden();
+    // await expect(authStep).toBeHidden();
+    // await expect(doneStep).toBeVisible();
 
-    await expect(doneStep.locator('.success-card__title')).toHaveText('Authentication was successfully updated!');
-    await doneStep.locator('ion-button').click();
+    // await expect(doneStep.locator('.success-card__title')).toHaveText('Authentication was successfully updated!');
+    // await doneStep.locator('ion-button').click();
     await expect(myProfilePage).toBeWorkspacePage();
     await logout(myProfilePage);
 

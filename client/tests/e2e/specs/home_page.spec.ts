@@ -331,11 +331,11 @@ msTest('Empty home page recover', async ({ context }) => {
   await expect(container).toBeVisible();
 
   const recoverBtn = container.locator('.recovery-no-devices').locator('ion-button');
-  await expect(page.locator('.recovery-content')).toBeHidden();
+  await expect(page.locator('.import-recovery-device-modal')).toBeHidden();
   await recoverBtn.click();
-  await expect(page.locator('.recovery-content')).toBeVisible();
-  await page.locator('.topbar-left__back-button').click();
-  await expect(page.locator('.recovery-content')).toBeHidden();
+  await expect(page.locator('.import-recovery-device-modal')).toBeVisible();
+  await page.locator('.closeBtn').click();
+  await expect(page.locator('.import-recovery-device-modal')).toBeHidden();
   await page.release();
 });
 
