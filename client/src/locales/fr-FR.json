@@ -523,7 +523,7 @@
     },
     "JoinByLinkModal": {
         "pageTitle": "Rejoindre une organisation",
-        "pleaseEnterUrl": "Si vous avez reçu un lien d'invitation, veuillez le coller ci-dessous.",
+        "pleaseEnterUrl": "Veuillez coller ci-dessous le lien que vous avez récupéré depuis votre autre appareil/navigateur.",
         "join": "Rejoindre"
     },
     "QuestionModal": {
@@ -1528,17 +1528,11 @@
     "ImportRecoveryDevicePage": {
         "titles": {
             "forgottenPassword": "Mot de passe oublié",
-            "recoveryFile": "Fichier de récupération",
-            "recoveryKey": "Clé secrète",
-            "setNewPassword": "Choisissez votre nouveau mot de passe",
-            "setNewAuthentication": "Choisissez une méthode d'authentification",
-            "passwordChanged": "L'authentification a bien été modifiée"
+            "authChanged": "L'authentification a bien été modifiée"
         },
         "subtitles": {
             "recoveryFilesMustExistWarning": "Vous devez avoir créé un fichier de récupération pour réinitialiser votre authentification.",
-            "password": "Mot de passe",
-            "passwordModified": "Vous pouvez vous connecter avec votre nouvelle authentification.",
-            "noFileSelected": "Aucun fichier sélectionné"
+            "setNewAuthentication": "Choisissez une méthode d'authentification"
         },
         "actions": {
             "browse": "Parcourir",
@@ -1546,7 +1540,79 @@
             "validateAuth": "Confirmer",
             "login": "Se connecter"
         },
+        "modal": {
+            "title": "Comment souhaitez-vous restaurer votre appareil ?",
+            "subtitle": "Choisissez une méthode de restauration pour continuer.",
+            "actions": {
+                "next": "Continuer",
+                "chooseMethod": "Continuer avec cette méthode"
+            },
+            "options": {
+                "otherConnectedDevice": {
+                    "title": "Autre appareil/navigateur connecté",
+                    "subtitle": "Uniquement si vous êtes connecté à un autre appareil ou navigateur au sein de cette organisation.",
+                    "badge": "Recommandé"
+                },
+                "recoveryFile": {
+                    "title": "Fichier de récupération",
+                    "subtitle": "Vous devez avoir créé un fichier de restauration et une clé secrète"
+                },
+                "shamir": {
+                    "title": "Cercle de confiance",
+                    "subtitle": "Vous devez avoir créé un cercle de confiance avec trois personnes minimum"
+                }
+            },
+            "placeholders": {
+                "otherConnectedDevice": "Template à compléter pour la restauration depuis un autre appareil.",
+                "recoveryFile": "Template à compléter pour la restauration avec un fichier de récupération.",
+                "shamir": "Template à compléter pour la restauration avec le cercle de confiance."
+            },
+            "connectedDevice": {
+                "title": "Récupération à partir d'un appareil existant",
+                "subtitle": "Veuillez suivre les étapes suivantes pour restaurer votre appareil à partir de votre autre appareil ou navigateur connecté.",
+                "joinLinkSubtitle": "Veuillez coller ci-dessous le lien que vous avez récupéré depuis votre autre appareil/navigateur.",
+                "joinLinkInputLabel": "Coller le lien d'invitation",
+                "joinLinkConfirmLink": "Valider le lien",
+                "steps": {
+                    "step1": "Connectez-vous à votre appareil existant",
+                    "step2": "Allez dans votre profil, puis cliquez sur Mes appareils",
+                    "step3": "Cliquez sur Ajouter un appareil",
+                    "step4": "Copiez (ou scannez) le lien depuis la fenêtre",
+                    "login": "Connectez-vous à votre appareil existant",
+                    "profileDevices": "Allez dans votre profil, puis cliquez sur Mes appareils",
+                    "addDevice": "Cliquez sur Ajouter un appareil",
+                    "copyOrScanLink": "Copiez (ou scannez) le lien depuis la fenêtre"
+                }
+            },
+            "recoveryFile": {
+                "title": "Récupération à partir d'un fichier de récupération",
+                "subtitle": "Vous devez ajouter votre fichier de récupération et saisir la clé secrète que vous avez enregistrée pour récupérer votre accès à partir de cet appareil/navigateur.",
+                "itemRecoveryFile": "Fichier de récupération",
+                "itemRecoveryKey": "Clé secrète",
+                "actions": {
+                    "addRecoveryFile": "Ajouter le fichier de récupération (.psrk)",
+                    "updateRecoveryFile": "Modifier"
+                }
+            },
+            "shamir": {
+                "steps": {
+                    "contactTrustedMembers": "Contactez les membres de votre cercle de confiance",
+                    "requestRecovery": "Demandez-leur de partager les informations de récupération",
+                    "enterVerificationCode": "Saisissez le code de vérification reçu",
+                    "chooseNewAuthentication": "Choisissez votre nouvelle méthode d'authentification"
+                }
+            },
+            "authentication": {
+                "title": "Choisissez une nouvelle méthode d'authentification",
+                "subtitle": "Votre méthode d'authentification actuelle n'est pas disponible. Veuillez en choisir une nouvelle pour vous connecter à cette organisation."
+            },
+            "done": {
+                "title": "Votre session a été récupérée !",
+                "login": "Se connecter à l'organisation"
+            }
+        },
         "errors": {
+            "decryptionErrorMessage": "Impossible de déchiffrer le fichier de récupération avec la clé secrète fournie.",
             "fileErrorMessage": "Le fichier de récupération est invalide.",
             "keyErrorMessage": "La clé secrète ne correspond pas au fichier de récupération.",
             "passwordErrorMessage": "Les mots de passe ne correspondent pas ou ne sont pas assez forts.",
@@ -1601,7 +1667,7 @@
         "continueWith": "Continuer avec {greeter}",
         "waitingForAnyHost": "En attente d'un administrateur",
         "waitingForHost": "En attente de l'administrateur",
-        "linkFormLabel": "Lien d'invitation",
+        "linkFormLabel": "Coller le lien d'invitation",
         "linkFormPlaceholder": "parsec3://exemple.com/Org?...",
         "successMessage": "Vous avez rejoint l'organisation avec succès.",
         "stepTitles": {
@@ -2068,7 +2134,7 @@
         "buttons": {
             "understand": "J'ai compris !",
             "confirm": "Confirmer",
-            "login": "Se connecter"
+            "login": "Se connecter à l'organisation"
         },
         "currentDevice": "Cet appareil",
         "newDevice": "Votre nouvel appareil",

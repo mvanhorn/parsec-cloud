@@ -49,7 +49,7 @@
               <template v-else-if="state === HomePageState.CustomerArea">
                 <client-area-login-page />
               </template>
-              <template v-else-if="state === HomePageState.Login">
+              <template v-else-if="state === HomePageState.Login || state === HomePageState.ForgottenPassword">
                 <login-page
                   v-if="selectedDevice"
                   :device="selectedDevice"
@@ -57,12 +57,6 @@
                   @forgotten-password-click="onForgottenPasswordClicked"
                   :login-in-progress="loginInProgress"
                   ref="loginPage"
-                />
-              </template>
-              <template v-else-if="state === HomePageState.ForgottenPassword">
-                <import-recovery-device-page
-                  :device="selectedDevice"
-                  @organization-selected="login"
                 />
               </template>
               <template v-else-if="state === HomePageState.AccountSettings">
@@ -144,7 +138,7 @@ import { StorageManager, StorageManagerKey, StoredDeviceData, persistStorage } f
 import AccountSettingsPage from '@/views/account/AccountSettingsPage.vue';
 import { AccountSettingsTabs } from '@/views/account/types';
 import ClientAreaLoginPage from '@/views/client-area/ClientAreaLoginPage.vue';
-import ImportRecoveryDevicePage from '@/views/devices/ImportRecoveryDevicePage.vue';
+import ImportRecoveryDeviceModal from '@/views/devices/ImportRecoveryDeviceModal.vue';
 import DeviceJoinOrganizationModal from '@/views/home/DeviceJoinOrganizationModal.vue';
 import HomePageButtons, { HomePageAction } from '@/views/home/HomePageButtons.vue';
 import HomePageHeader from '@/views/home/HomePageHeader.vue';
@@ -444,16 +438,16 @@ async function onInvitationClicked(invitation: AccountInvitation): Promise<void>
   await openJoinByLinkModal(invitationAddr);
 }
 
-async function onJoinOrganizationClicked(): Promise<void> {
+async function onJoinOrganizationClicked(isCustomText?: boolean): Promise<void> {
   const link = await getTextFromUser(
     {
-      title: 'JoinByLinkModal.pageTitle',
-      subtitle: 'JoinByLinkModal.pleaseEnterUrl',
+      title: isCustomText ? 'ImportRecoveryDevicePage.modal.connectedDevice.title' : 'JoinByLinkModal.pageTitle',
+      subtitle: isCustomText ? 'ImportRecoveryDevicePage.modal.connectedDevice.joinLinkSubtitle' : 'JoinByLinkModal.pleaseEnterUrl',
       trim: true,
       validator: claimAndBootstrapLinkValidator,
-      inputLabel: 'JoinOrganization.linkFormLabel',
+      inputLabel: isCustomText ? 'ImportRecoveryDevicePage.modal.connectedDevice.joinLinkInputLabel' : 'JoinOrganization.linkFormLabel',
       placeholder: 'JoinOrganization.linkFormPlaceholder',
-      okButtonText: 'JoinByLinkModal.join',
+      okButtonText: isCustomText ? 'ImportRecoveryDevicePage.modal.connectedDevice.joinLinkConfirmLink' : 'JoinByLinkModal.join',
     },
     isLargeDisplay.value,
   );
@@ -900,7 +894,7 @@ async function handleLoginError(device: AvailableDevice, error: ClientStartError
       });
       if (answer === Answer.Yes) {
         selectedDevice.value = device;
-        state.value = HomePageState.ForgottenPassword;
+        await openForgottenPasswordModal(device);
       }
     } else {
       informationManager.present(
@@ -1071,9 +1065,34 @@ async function backToPreviousPage(): Promise<void> {
   }
 }
 
-function onForgottenPasswordClicked(device?: AvailableDevice): void {
+async function onForgottenPasswordClicked(device?: AvailableDevice): Promise<void> {
+  await openForgottenPasswordModal(device);
+}
+
+async function openForgottenPasswordModal(device?: AvailableDevice): Promise<void> {
   selectedDevice.value = device;
-  state.value = HomePageState.ForgottenPassword;
+  const modal = await modalController.create({
+    component: ImportRecoveryDeviceModal,
+    cssClass: 'import-recovery-device-modal',
+    canDismiss: true,
+    backdropDismiss: true,
+    showBackdrop: true,
+    componentProps: {
+      device: device,
+      informationManager,
+    },
+  });
+  await modal.present();
+  const { role, data } = await modal.onWillDismiss();
+
+  if (role === MsModalResult.Confirm && data?.recoveryMethod === 'connected-device') {
+    await onJoinOrganizationClicked(true);
+    return;
+  }
+
+  if (role === MsModalResult.Confirm && data?.recoveryMethod === 'recovery-file' && data?.device && data?.access) {
+    await login(data.device, data.access);
+  }
 }
 
 async function goToCustomerAreaLogin(): Promise<void> {
