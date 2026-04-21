@@ -1,8 +1,20 @@
-# This script is used to create a signed release of Parsec
-# using a single command from the pre-built windows artefact.
+<#
+.SYNOPSIS
+  Create a signed release of Parsec
 
-# This is meant to be run in the `client/electron` directory.
+.DESCRIPTION
+  This script is used to create a signed release of Parsec
+  using a single command from the pre-built windows artefact.
 
+  This is meant to be run in the `client/electron` directory.
+
+.PARAMETER Hardened
+    Perform the signature for an hardened build
+#>
+[CmdletBinding()]
+param(
+    [switch] $Hardened
+)
 # Stop at first error
 # Note this only works for shell commands, executables return code must still
 # be checked manually :/
@@ -24,7 +36,11 @@ if (Test-Path dist) {
 npm clean-install
 
 # Build and sign the release
-npm run electron:sign
+if ($Hardened) {
+    npm run electron:sign -- --hardened
+} else {
+    npm run electron:sign
+}
 if ($LastExitCode -ne 0) {
     exit $LastExitCode
 }

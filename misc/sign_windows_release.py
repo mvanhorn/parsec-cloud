@@ -315,7 +315,7 @@ def sign_gui(version: str | None, workdir: Path, hardened: bool = False) -> None
     # 3) Build & sign using the sub-script embedded in the artifact
 
     script = (destination / GUI_SIGN_SCRIPT_NAME).resolve()
-    subprocess.run([script], check=True, cwd=destination)
+    subprocess.run([script] + (["-Hardened"] if hardened else []), check=True, cwd=destination)
     assets_directory = destination / "upload"
     assert assets_directory.exists()
 
