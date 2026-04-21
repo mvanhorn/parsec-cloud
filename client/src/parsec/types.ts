@@ -464,6 +464,7 @@ interface OrganizationInfo {
   organizationAddr: ParsecOrganizationAddr;
   organizationId: OrganizationID;
   creationDate?: DateTime;
+  minimumArchivingPeriod?: bigint;
 }
 
 interface AccountInvitation {

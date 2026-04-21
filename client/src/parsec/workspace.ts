@@ -40,7 +40,7 @@ import {
 import { generateNoHandleError } from '@/parsec/utils';
 import { CertificateBasedInfoOriginTag, libparsec, RealmArchivingConfiguration } from '@/plugins/libparsec';
 import { getConnectionHandle } from '@/router';
-import { DateTime } from 'luxon';
+import { DateTime, DurationLike } from 'luxon';
 
 export async function initializeWorkspace(
   workspaceId: WorkspaceID,
@@ -352,9 +352,14 @@ export async function trashWorkspace(workspace: WorkspaceID): Promise<Result<nul
   if (!handle) {
     return generateNoHandleError<ClientArchiveWorkspaceError>();
   }
+  let minimumArchivingPeriod: DurationLike = { days: 30 };
+  const clientResult = await getClientInfo();
+  if (clientResult.ok) {
+    minimumArchivingPeriod = { seconds: Number(clientResult.value.serverOrganizationConfig.minimumArchivingPeriod) };
+  }
   return await libparsec.clientArchiveWorkspace(handle, workspace, {
     tag: RealmArchivingConfigurationTag.DeletionPlanned,
-    deletionDate: DateTime.now().plus({ days: 30 }).toMillis() as any as DateTime,
+    deletionDate: DateTime.now().plus(minimumArchivingPeriod).toMillis() as any as DateTime,
   });
 }
 

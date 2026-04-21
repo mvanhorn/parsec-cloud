@@ -8,6 +8,7 @@ import {
   WorkspaceInfo,
   WorkspaceName,
   WorkspaceRole,
+  getClientInfo,
   getClientProfile,
   getSystemPath,
   getWorkspaceInfo,
@@ -351,9 +352,14 @@ async function restoreWorkspace(
 }
 
 async function trashWorkspace(workspace: WorkspaceInfo, informationManager: InformationManager, eventDistributor: EventDistributor) {
+  let archivingDays: number = 30;
+  const clientResult = await getClientInfo();
+  if (clientResult.ok) {
+    archivingDays = Number(clientResult.value.serverOrganizationConfig.minimumArchivingPeriod) / (60 * 60 * 24); // seconds to days
+  }
   const answer = await askQuestion(
     'WorkspacesPage.trashWorkspace.title',
-    { key: 'WorkspacesPage.trashWorkspace.subtitle', data: { workspace: workspace.name } },
+    { key: 'WorkspacesPage.trashWorkspace.subtitle', data: { workspace: workspace.name, days: archivingDays } },
     { yesText: 'WorkspacesPage.trashWorkspace.yes', noText: 'WorkspacesPage.trashWorkspace.no', yesIsDangerous: true },
   );
   if (answer === Answer.No) {
